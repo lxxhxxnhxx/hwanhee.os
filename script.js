@@ -3,7 +3,7 @@ const cursor = document.getElementById('cursor');
 document.addEventListener('mousemove', (e) => {
     gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
 });
-
+ 
 // 2. Intro Sequence
 const tl = gsap.timeline();
 tl.to("#intro-screen", { backgroundPosition: "55% 50%", duration: 6, ease: "linear" }); 
