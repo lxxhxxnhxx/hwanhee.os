@@ -3,122 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HWANHEE // OS_V3.0</title>
-    
-    <!-- External Libraries -->
+    <title>HWANHEE // OS_V2.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@900&family=JetBrains+Mono&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     
-    <style>
-        /* --- CSS (디자인) --- */
-        :root {
-            --neon-green: #39FF14;
-            --chrome: linear-gradient(180deg, #ffffff 0%, #e0e0e0 40%, #7a7a7a 50%, #d1d1d1 100%);
-        }
-
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            overflow: hidden; background: #000 !important; /* 배경을 강제로 검은색으로 */
-            font-family: 'Inter', sans-serif;
-            cursor: none;
-        }
-
-        #intro-screen {
-            position: fixed; inset: 0; z-index: 999;
-            background-image: url('cloud-bg.png');
-            background-size: cover; background-position: center;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        #intro-screen::before {
-            content: ""; position: absolute; inset: 0;
-            background: rgba(0, 51, 204, 0.2);
-            mix-blend-mode: overlay;
-        }
-
-        .chrome-text {
-            position: absolute;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 7vw;
-            text-transform: uppercase;
-            background: var(--chrome);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)) drop-shadow(0 0 15px rgba(255,255,255,0.5));
-            letter-spacing: -2px;
-            opacity: 0;
-            white-space: nowrap;
-        }
-
-        #desktop {
-            width: 100vw; height: 100vh;
-            background: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=2070') no-repeat center center;
-            background-size: cover;
-            display: none; position: relative;
-        }
-
-        .window {
-            position: absolute; width: 300px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,0.4);
-            border-radius: 8px 8px 0 0;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        .window-header {
-            background: linear-gradient(90deg, #0033CC 0%, #4287f5 100%);
-            padding: 8px 12px; display: flex; justify-content: space-between; align-items: center;
-            cursor: grab; color: white; font-size: 11px; font-weight: bold;
-        }
-
-        .window-body { padding: 15px; color: white; cursor: pointer; }
-
-        .project-thumb {
-            width: 100%; height: 150px; background: #000;
-            border: 1px solid var(--neon-green);
-            overflow: hidden; margin-bottom: 10px;
-        }
-
-        .project-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
-        .window:hover .project-thumb img { opacity: 1; transform: scale(1.1); }
-
-        #taskbar {
-            position: absolute; bottom: 0; width: 100%; height: 45px;
-            background: linear-gradient(180deg, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #1941a5 100%);
-            display: flex; align-items: center; padding: 0 10px; z-index: 1000;
-        }
-
-        #start-btn {
-            background: linear-gradient(180deg, #388e3c 0%, #4caf50 100%);
-            padding: 4px 22px; border-radius: 0 15px 15px 0;
-            color: white; font-style: italic; font-weight: 900;
-            cursor: pointer;
-        }
-
-        #cursor {
-            width: 24px; height: 24px; background: var(--neon-green);
-            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
-            mix-blend-mode: difference; clip-path: polygon(0% 0%, 100% 70%, 40% 70%, 0% 100%);
-        }
-
-        #detail-view {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
-            z-index: 2000; display: none; padding: 5vw; overflow-y: auto;
-        }
-
-        .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--neon-green); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="cursor"></div>
 
-    <div id="intro-screen">
+    <div id="loading-screen">
+        <div id="glass-layer"></div>
         <h1 id="text-hello" class="chrome-text">hello</h1>
         <h1 id="text-hwanhee" class="chrome-text">i'm hwanhee</h1>
     </div>
@@ -126,97 +23,34 @@
     <div id="desktop">
         <div id="taskbar">
             <div id="start-btn">start</div>
-            <div class="ml-auto text-white mono font-bold pr-4" id="clock">12:00 PM</div>
+            <div class="ml-auto flex gap-4 text-white mono text-[10px]">
+                <span class="opacity-50">CPU: 12%</span>
+                <span id="clock">12:00 PM</span>
+            </div>
         </div>
     </div>
 
     <div id="detail-view">
-        <button onclick="closeDetail()" class="text-white mono mb-10">[ EXIT_SESSION ]</button>
-        <h2 id="detail-title" class="text-white text-6xl font-black italic uppercase">PROJECT</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
-            <div class="bg-white/5 p-8 border border-white/10">
-                <p class="text-white text-xl mb-6">HYPER-REALISM DIGITAL ARCHIVE V3.0</p>
-                <div class="mono">STATUS: ARCHIVED_SUCCESSFULLY</div>
+        <div class="flex justify-between items-start mb-20">
+            <div class="mono text-zinc-500 text-xs">PROJECT_ID: <span id="project-id">001</span></div>
+            <button onclick="closeDetail()" class="text-white mono hover:text-green-400">[ EXIT_SESSION ]</button>
+        </div>
+        <h2 id="detail-title" class="chrome-text" style="position:relative; opacity:1; font-size: 8vw; display:block;">TITLE</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-20 mt-20">
+            <div class="space-y-6 text-white">
+                <p class="text-xl leading-relaxed opacity-80">Hyper-focused digital execution combining Y2K aesthetics with modern high-end performance. Designed to break the grid while maintaining technical precision.</p>
+                <div class="h-[1px] w-full bg-white/20"></div>
+                <div class="flex gap-10 mono text-xs text-green-400">
+                    <div>ROLE: LEAD_DESIGN</div>
+                    <div>TECH: WEBGL / GSAP</div>
+                </div>
             </div>
-            <div class="h-96 bg-zinc-900 border border-white/20">
-                <img id="detail-img" src="" class="w-full h-full object-cover">
+            <div class="h-96 bg-zinc-900 rounded-lg overflow-hidden border border-white/10">
+                <img id="detail-img" src="" class="w-full h-full object-cover" alt="">
             </div>
         </div>
     </div>
 
-    <script>
-        /* --- JS (기능) --- */
-        const cursor = document.getElementById('cursor');
-        document.addEventListener('mousemove', (e) => {
-            gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0.1 });
-        });
-
-        const tl = gsap.timeline();
-        tl.to("#text-hello", { opacity: 1, duration: 1.2, ease: "power3.out" }, 0.5)
-          .to("#text-hello", { opacity: 0, duration: 0.8 }, 2.0)
-          .to("#text-hwanhee", { opacity: 1, duration: 1.2, ease: "power3.out" }, 2.5)
-          .to("#intro-screen", { 
-              y: "-100%", duration: 1.5, ease: "expo.inOut",
-              onComplete: () => {
-                  document.getElementById('intro-screen').style.display = 'none';
-                  document.getElementById('desktop').style.display = 'block';
-                  initDesktop();
-              }
-          }, 4.5);
-
-        const projects = [
-            { name: "NEO_SEOUL", img: "https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=600" },
-            { name: "CYBER_HEART", img: "https://images.unsplash.com/photo-1633167606207-d840b5070fc2?w=600" },
-            { name: "LIQUID_METAL", img: "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=600" }
-        ];
-
-        function initDesktop() {
-            projects.forEach((p, i) => {
-                const win = document.createElement('div');
-                win.className = 'window';
-                win.style.left = (50 + (i * 100)) + "px";
-                win.style.top = (100 + (i * 50)) + "px";
-                win.innerHTML = `
-                    <div class="window-header"><span>${p.name}.exe</span></div>
-                    <div class="window-body" onclick="openDetail('${p.name}', '${p.img}')">
-                        <div class="project-thumb"><img src="${p.img}"></div>
-                        <div class="mono text-[10px]">EXPLORE_DATA →</div>
-                    </div>
-                `;
-                document.getElementById('desktop').appendChild(win);
-                makeDraggable(win);
-            });
-        }
-
-        function makeDraggable(el) {
-            let p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-            el.querySelector('.window-header').onmousedown = (e) => {
-                p3 = e.clientX; p4 = e.clientY;
-                document.onmouseup = () => { document.onmouseup = null; document.onmousemove = null; };
-                document.onmousemove = (e) => {
-                    p1 = p3 - e.clientX; p2 = p4 - e.clientY;
-                    p3 = e.clientX; p4 = e.clientY;
-                    el.style.top = (el.offsetTop - p2) + "px";
-                    el.style.left = (el.offsetLeft - p1) + "px";
-                };
-            };
-        }
-
-        function openDetail(name, img) {
-            const d = document.getElementById('detail-view');
-            document.getElementById('detail-title').innerText = name;
-            document.getElementById('detail-img').src = img;
-            d.style.display = 'block';
-            gsap.fromTo(d, { opacity: 0 }, { opacity: 1, duration: 0.5 });
-        }
-
-        function closeDetail() {
-            document.getElementById('detail-view').style.display = 'none';
-        }
-
-        setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
